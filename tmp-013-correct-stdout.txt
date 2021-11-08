@@ -1,0 +1,10 @@
+Cannot spell MOT
+Cannot spell MANOR
+2,0,8,7,6: HONDA
+Cannot spell HATE
+Cannot spell TOMMY
+Cannot spell EAT
+2,9,0,7: ABED
+Cannot spell HARPY
+9,5,2,0,1: BUXOM
+Cannot spell SUSAN
