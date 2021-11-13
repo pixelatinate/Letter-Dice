@@ -29,7 +29,10 @@ struct Node{
 };
 
 struct Edge{
-
+	Node* ahead ;
+	Node* behind ;
+	Edge* backUp ;
+	int original , extra ;
 };
 
 struct Graph{
@@ -92,7 +95,7 @@ int main( int argc , char* argv[] ){
 		for( int j = 0 ; j < words.at( i ).length() ; j++ ){
 			
 			// Creates the new node
-			Node letter* = new Node ;
+			Node *letter = new Node ;
 			
 			// Pushes the appropriate value back into the node
 			letter->id = counter ;
@@ -103,6 +106,27 @@ int main( int argc , char* argv[] ){
 			// Pushes each letter back
 			currentLetters.push_back( letter ) ;
 		}
+
+		// Die go to source, letters go to sink
+		for( int j = 0 ; j < dice.size() ; j++ ){
+			Edge *diceEdge = new Edge ;
+			Edge *backEdge = new Edge ;
+
+			diceEdge->ahead = dice.at( j ) ;
+			diceEdge->behind = source ;
+			diceEdge->original = 1 ;
+		
+			backEdge->ahead= source ;
+			backEdge->behind = dice.at( j ) ;
+			backEdge->extra = 1 ;
+
+			diceEdge->backUp = backEdge ;
+			backEdge->backUp = diceEdge ;
+
+			source->adj.push_back(diceEdge) ;
+			dice.at(j)->adj.push_back(backEdge) ;
+		}
+
 	}
 
     return 0 ;
