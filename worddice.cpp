@@ -51,7 +51,7 @@ int main( int argc , char* argv[] ){
 	string temp ;
 	ifstream inputFile ;
 	vector <Node*> dice ;
-	vector <Node*> letters ;
+	vector <Node*> selectedLetter ;
 	vector <string> words ;
 	int counter ;
 	Graph graph;
@@ -104,10 +104,29 @@ int main( int argc , char* argv[] ){
 			letter->letters.at( words.at(i).at(j) - 'A' ) = 1 ;
 
 			// Pushes each letter back
-			currentLetters.push_back( letter ) ;
+			selectedLetter.push_back( letter ) ;
 		}
 
-		// Die go to source, letters go to sink
+		// Letters go to sink, die go to source
+		for( int j = 0; j < selectedLetter.size(); j++){
+			Edge *diceEdge = new Edge ;
+			Edge *backEdge = new Edge ;
+
+			diceEdge->ahead = sink ;
+			diceEdge->behind = selectedLetter.at( j ) ;
+			diceEdge->original = 1 ;
+
+			backEdge->ahead= selectedLetter.at( j ) ;
+			backEdge->behind = sink ;
+			backEdge->extra = 1 ;
+
+			diceEdge->backUp = backEdge ;
+			backEdge->backUp = diceEdge ;
+
+			selectedLetter.at( j )->adj.push_back( diceEdge ) ;
+			sink->adj.push_back( backEdge ) ;
+		}
+
 		for( int j = 0 ; j < dice.size() ; j++ ){
 			Edge *diceEdge = new Edge ;
 			Edge *backEdge = new Edge ;
@@ -127,7 +146,77 @@ int main( int argc , char* argv[] ){
 			dice.at(j)->adj.push_back(backEdge) ;
 		}
 
-	}
+		// Compares die to letter nodes and links them
+		for( int j = 0 ; j < dice.size() ; j++ ){
+			for( int k = 0 ; k < selectedLetter.size() ; k++ ){
+				for( int l = 0 ; l < dice.at( j )->letters.size() ; l++ ){
+					if( ( selectedLetter.at( k )->letters.at( l ) == 1 ) && ( dice.at( j )->letters.at( l ) == 1 ) ){
 
+						Edge *diceEdge = new Edge ;
+						Edge *backEdge = new Edge ;
+
+						diceEdge->ahead = selectedLetter.at( k ) ;
+						diceEdge->behind = dice.at(j) ;
+						diceEdge->original = 1 ;
+
+						backEdge->ahead = dice.at( j ) ;
+						backEdge->behind = selectedLetter.at( k ) ;
+
+						diceEdge->backUp = backEdge ;
+						backEdge->backUp = diceEdge ;
+
+						dice.at( j )->adj.push_back( diceEdge ) ;
+						selectedLetter.at( k )->adj.push_back( backEdge ) ;
+					}
+				}
+			}
+		}
+
+		// Puts the nodes in the graph
+		graph.nodes.push_back( source ) ; 
+
+		for( int j = 0 ; j < dice.size() ; j++ ){
+			graph.nodes.push_back( dice.at( j ) ) ;
+		}
+		for( int j = 0 ; j < selectedLetter.size() ; j++ ){
+			graph.nodes.push_back( selectedLetter.at( j ) ) ;
+		}
+
+		// Saves the sink
+		graph.nodes.push_back( sink ) ;
+
+		// Saves the smallest size
+		graph.minimum = dice.size() ;
+
+		// Accounts for if the word can't be spelled 
+		if( dice.size() < selectedLetter.size() ){
+			cout << selectedLetter.size() << "\n" ;
+			cout << "Cannot Spell: " << words.at( i ) << "\n" ;
+		}
+
+		// Prints it out if it can be spelled
+		if( graph.confirm() ){
+			for( int j = 0 ; j < graph.usedDie.size() ; j++ ){
+				if ( j == 0 ){
+					cout << graph.usedDie.at( j ) ;
+				}
+				else{
+					cout << "," << graph.usedDie.at( j ) ;
+				}
+			}
+			cout << ": " << words.at( i ) << "\n" ;
+		}
+		
+		// Other cases
+		else{
+			cout << "Cannot spell " << words.at( i ) << "\n" ;
+		}
+
+		// Clears previous data for the next run 
+		graph.clear() ;
+		graph.usedDie.clear() ;
+		selectedLetter.clear() ;
+		counter = ( dice.size() + 1 ) ;
+	}
     return 0 ;
 }
