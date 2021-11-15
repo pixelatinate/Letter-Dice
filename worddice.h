@@ -8,7 +8,6 @@
 // worddice.h
 
 // Libraries 
-# include <map>
 # include <list>
 # include <vector>
 # include <fstream>
