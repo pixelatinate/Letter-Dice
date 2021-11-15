@@ -31,3 +31,4 @@ Contains the words that our program needs to try and spell.
 
 
 ## Complexity of Our Implementation
+So for the complexity we used a BFS, list, map and nodes. A BFS is O(V) where V is the number of nodes. Though in some cases it will be O(V^2). The BFS allows us to store nodes with multiple sources of input and use graphs to see all possibilites. The BFS is a fast way to find all of this information and transverse through options quickly.
