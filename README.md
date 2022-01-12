@@ -5,7 +5,7 @@ The write up for this project is here: https://web.eecs.utk.edu/~semrich/cs302-2
 **Authors:** Katie Nuchols (@knuchols) and Swasti Mishra (@pixelatinate)
 
 ## Files
-**worddice.cpp :**
+**worddice.cpp:**
 Contains the driver function for our project.
 
 **worddice.h:**
